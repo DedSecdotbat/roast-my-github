@@ -1,6 +1,6 @@
 "use client";
 
-import Loader from "@/app/shared/components/Loader";
+import Loader from "@/shared/components/Loader";
 import axios from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
 import { GithubRepoResponseProp } from "../types";
@@ -24,7 +24,7 @@ const UsernameForm: React.FC<UsernameFormProps> = ({
   const handleRoastBtn = async () => {
     try {
       handleLoadingAction;
-      const res = await axios.post("/api/github", { username });
+      const res = await axios.post("api/github", { username });
       if (res?.data) {
         handleGithubData(res?.data?.github_repo_data);
         handleLoadingAction(!isLoading);

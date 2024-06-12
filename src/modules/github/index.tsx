@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import UsernameForm from "./components/UsernameForm";
 import Typewriter from "typewriter-effect";
-import ChatWindow from "@/app/shared/components/ChatWindow";
-import InputForm from "@/app/shared/components/InputForm";
-import Loader from "@/app/shared/components/Loader";
+import ChatWindow from "@/shared/components/ChatWindow";
+import InputForm from "@/shared/components/InputForm";
+import Loader from "@/shared/components/Loader";
 import { GithubRepoResponseProp } from "./types";
 
 const GithubModule: React.FC = () => {
@@ -45,38 +45,22 @@ const GithubModule: React.FC = () => {
   return (
     <main>
       <div className="grid place-items-center place-content-center h-[100vh]">
-        {githubRepoData.length === 0 ? (
-          <div>
-            <h3 className="text-6xl font-mono font-bold mb-6">
-              Roast My Github!
-            </h3>
-            <UsernameForm
-              isLoading={isLoading}
-              handleLoadingAction={(isLoading: boolean) =>
-                setIsLoading(!isLoading)
-              }
-              handleGithubData={(githubData: GithubRepoResponseProp[]) =>
-                setGithubRepoData(githubData)
-              }
-              username={username}
-              setUsername={setUsername}
-            />
-          </div>
-        ) : (
-          <Typewriter
-            onInit={(typewriter) => {
-              typewriter
-                .typeString(
-                  `Hi, Your Top Github Repositories are ${topGithubRepo()?.map(
-                    (item: string) => item
-                  )}
-                `
-                )
-                .pauseFor(1000)
-                .start();
-            }}
+        <div>
+          <h3 className="text-6xl font-mono font-bold mb-6 ">
+            Roast My Github!
+          </h3>
+          <UsernameForm
+            isLoading={isLoading}
+            handleLoadingAction={(isLoading: boolean) =>
+              setIsLoading(!isLoading)
+            }
+            handleGithubData={(githubData: GithubRepoResponseProp[]) =>
+              setGithubRepoData(githubData)
+            }
+            username={username}
+            setUsername={setUsername}
           />
-        )}
+        </div>
       </div>
     </main>
   );

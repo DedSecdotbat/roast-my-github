@@ -1,6 +1,6 @@
 "use client";
 
-import GithubModule from "./modules/github";
+import GithubModule from "../modules/github";
 
 export default function Home() {
   return (
