@@ -44,11 +44,9 @@ const GithubModule: React.FC = () => {
 
   return (
     <main>
-      <div className="grid place-items-center place-content-center h-[100vh]">
-        <div>
-          <h3 className="text-6xl font-mono font-bold mb-6 ">
-            Roast My Github!
-          </h3>
+      <div className="grid grid-cols-2 place-items-center place-content-center h-[100vh]">
+        <div className="grid gap-4 place-content-center place-items-center">
+          <p className="text-5xl font-extrabold">Roast My Github!</p>
           <UsernameForm
             isLoading={isLoading}
             handleLoadingAction={(isLoading: boolean) =>
@@ -60,6 +58,13 @@ const GithubModule: React.FC = () => {
             username={username}
             setUsername={setUsername}
           />
+        </div>
+        <div className="blob-section animate-blob ">
+          <div className="relative w-full max-w-lg ">
+            <div className="absolute top-0 -right-4 w-20 h-20 md:w-36 md:h-36   bg-[#FA96C2] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+            <div className="absolute top-0 -left-4 w-20 h-20 md:w-36 md:h-36 bg-[#F65879] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob "></div>
+            <div className="absolute -bottom-20 left-5 w-20 h-20 md:w-36 md:h-36 bg-[#FEA58F] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+          </div>
         </div>
       </div>
     </main>

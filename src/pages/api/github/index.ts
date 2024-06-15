@@ -1,6 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import {
+  GoogleGenerativeAI,
+  HarmBlockThreshold,
+  HarmCategory,
+} from "@google/generative-ai";
 import { GithubRepoResponseProp } from "@/modules/github/types";
 
 export default async function handler(
@@ -20,16 +24,39 @@ export default async function handler(
       res.status(500).json({ message: "API KEY REQUIRED" });
       return;
     }
+
+    const generationConfig = {
+      temperature: 1,
+      topP: 0.95,
+      topK: 64,
+      maxOutputTokens: 1000,
+    };
+
+    const safetySettings = [
+      {
+        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+        threshold: HarmBlockThreshold.BLOCK_NONE,
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+        threshold: HarmBlockThreshold.BLOCK_NONE,
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+        threshold: HarmBlockThreshold.BLOCK_NONE,
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+        threshold: HarmBlockThreshold.BLOCK_NONE,
+      },
+    ];
+
     const googleAI = new GoogleGenerativeAI(gemini_api_key || "");
-    // const geminiConfig = {
-    //   temperature: 0.9,
-    //   topP: 1,
-    //   topK: 1,
-    //   maxOutputTokens: 150,
-    // };
 
     const geminiModel = googleAI.getGenerativeModel({
       model: "gemini-pro",
+      generationConfig,
+      safetySettings,
     });
 
     const model = googleAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -44,7 +71,7 @@ export default async function handler(
       const githubReposData = githubReposRes.data;
       const generate = async () => {
         try {
-          const prompt = `Act as a roast comedian, and try analysing my github repo data and roast me on another level as hard as you could go. here is my github repository data ${githubReposData} `;
+          const prompt = `Act as a roast comedian, and try roasting my github repo data and roast me on all level as hard as you could go. Try making two three jokes on github repository names and project ideas, also include commit messages and code review if any. here is my github repository data ${githubReposData} `;
           const result = await geminiModel.generateContent(prompt);
           const response = result.response;
           return response.text();

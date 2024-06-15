@@ -18,7 +18,7 @@
 
 @layer base {
   body {
-    @apply bg-gradient-bg text-divamecha font-mono;
+    @apply bg-gradient-bg text-richBlack font-mono;
   }
 }
 @layer utilities {
