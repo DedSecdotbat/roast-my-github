@@ -84,7 +84,6 @@ export default async function handler(
         }
       };
       const response = await generate();
-      console.log(response);
       res.status(200).json({ roast: response });
     } catch (error) {
       console.error(error);
