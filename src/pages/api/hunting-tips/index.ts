@@ -58,7 +58,7 @@ export default async function handler(
     try {
       const generate = async () => {
         try {
-          const prompt = `Act as a Technical lead of a FANG Organization and give him some insights on the basis of the roast data that I am sharing with you, you can suggest him some better and nuanced exploration on the technology, languages and other parameters you like, ${roastData} `;
+          const prompt = `Act as a Technical lead of a FANG Organization and give user some piece of advice on the basis of the roast data that I am sharing with you, you can suggest them some better and nuanced exploration on the technology, languages and other parameters you like, here is my roastData ${roastData} `;
           const result = await geminiModel.generateContent(prompt);
           const response = result.response;
           return response.text();
