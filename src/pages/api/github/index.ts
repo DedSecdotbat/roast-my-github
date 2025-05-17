@@ -54,7 +54,7 @@ export default async function handler(
     const googleAI = new GoogleGenerativeAI(gemini_api_key || "");
 
     const geminiModel = googleAI.getGenerativeModel({
-      model: "gemini-pro",
+      model: "gemini-2.0-flash",
       generationConfig,
       safetySettings,
     });
@@ -65,22 +65,48 @@ export default async function handler(
       );
       const githubUserData = githubUserRes.data;
 
+      console.log({ githubUserData });
+
       const githubReposRes = await axios.get(githubUserData.repos_url);
       const githubReposData: GithubRepoResponseProp[] = githubReposRes.data;
+
+      console.log(githubReposData);
+
       const generate = async () => {
         try {
-          const prompt = `Act as a roast comedian, and try roasting them on github repository data and roast them on all level as hard as you could go. Generate a roast that they could never code again or if the they try to than they should think twice before sharing in public. Also Add some funny coding repository names from githubrepo data, Mock them as they are wanna be FAANG Engineers. Here is my github repository description as well ${githubReposData.forEach(
-            (item) => item?.description
-          )} Here is my github repo data, ${githubReposData}. By the way my name is ${
-            githubReposData[0]?.owner?.login
-          } and you can use this repository names if you want to ${githubReposData?.forEach(
-            (item) => item?.name
-          )}`;
+          const descriptions = githubReposData
+            .map((item) => item?.description)
+            .join(", ");
+          const repoNames = githubReposData
+            .map((item) => item?.name)
+            .join(", ");
+          const username = githubReposData[0]?.owner?.login || "Anonymous";
+
+          const prompt = `
+          Act as a savage roast comedian with a talent for cutting sarcasm. Your target? A so-called developer who thinks they are a code wizard but has a GitHub profile full of questionable experiments. 
+          
+          Here are their GitHub repository descriptions: ${
+            descriptions || "Absolutely nothing worth mentioning."
+          }.
+          
+          Here are their GitHub repository names: ${
+            repoNames || "A collection of failed dreams and spaghetti code."
+          }.
+          
+          Their GitHub username is: ${username}, but let's be honest, they might want to change it after this.
+          
+          Roast them without mercy. Tear apart their naming choices, mock their desperate attempts at coding, and question their so-called 'technical prowess'. Mention how their repo names sound like someone spilled a Scrabble bag while trying to code, and their descriptions are like self-destruct buttons for anyone who dares to read them.
+          
+          Don't just roast them—obliterate their confidence. Make them feel like they should attach a 'Work in Progress' sign to their entire career. And don't forget to add some clever, fake but hilariously bad GitHub repo names they could create next, like 'SpaghettiScript', '404-Brain-Not-Found', or 'Uninstall-Career'.
+        `;
+
           const result = await geminiModel.generateContent(prompt);
           const response = result.response;
+
           return response.text();
         } catch (error) {
-          console.log("response error", error);
+          console.error("response error", error);
+          throw new Error("Failed to generate roast. Please try again later.");
         }
       };
       const response = await generate();
